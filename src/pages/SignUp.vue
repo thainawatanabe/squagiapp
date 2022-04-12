@@ -9,7 +9,7 @@
         <q-input dense outlined color="primary" v-model="signUp.name" label="Usuário" />
         <q-input dense outlined color="primary" v-model="signUp.email" label="E-mail" />
         <q-input dense outlined color="primary" v-model="signUp.phone" label="Celular (WhatsApp)" />
-        <q-input dense outlined color="primary" v-model="signUp.password" label="Senha" />
+        <q-input dense outlined color="primary" v-model="signUp.password" label="Senha" type="password" />
 
         <q-btn rounded flat label="Cadastrar" class="theme-button" @click="onSubmit()" />
       </q-card-section>

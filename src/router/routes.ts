@@ -3,7 +3,7 @@ import store from "../store";
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/',
+    path: '/home',
     component: () => import('layouts/MainLayout.vue'),
     // beforeEnter: (_to, _from, next) => {
     //   if (store.getters.loggedIn) {
@@ -15,6 +15,17 @@ const routes: RouteRecordRaw[] = [
     //   }
     // },
     children: [{ path: '', component: () => import('pages/Index.vue') }],
+  },
+
+  {
+    path: "/",
+    component: () => import("layouts/BackgroundLayout.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/Login.vue")
+      }
+    ]
   },
 
   {

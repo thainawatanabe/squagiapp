@@ -6,7 +6,7 @@
       </q-card-section>
       <q-card-section id="input-section">
         <q-input dense outlined color="primary" v-model="username" label="Usuário" />
-        <q-input dense outlined color="primary" v-model="password" label="Senha" />
+        <q-input dense outlined color="primary" v-model="password" label="Senha" type="password"/>
         <p class="button-like text-left" style="font-size: 13px" @click="$router.push('/senha')">Esqueceu a senha?</p>
         <p class="text-warning" v-if="error">Verifique os campos e tente novamente</p>
         <q-btn :disable="loading" :loading="loading" rounded flat label="Entrar" class="theme-button" @click="onSubmit()" />
@@ -70,7 +70,7 @@ export default defineComponent({
         return;
       }
       this.$store.dispatch('saveSessionInfo', response);
-      this.$router.push('/');
+      this.$router.push('/home');
     }
   }
 });

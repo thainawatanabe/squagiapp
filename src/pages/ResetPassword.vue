@@ -12,7 +12,7 @@
         <q-btn :loading="loading" :disable="loading" rounded flat label="Enviar" placeholder="Digite seu e-mail" class="theme-button" @click="onSubmit()" />
       </q-card-section>
       <q-card-section id="input-section" v-else>
-        <q-input dense outlined color="primary" v-model="passwordRequest.password" label="Nova senha" />
+        <q-input dense outlined color="primary" v-model="passwordRequest.password" label="Nova senha" type="password" />
         <p class="text-warning" v-if="error">Verifique os campos e tente novamente</p>
         <q-btn :loading="loading" :disable="loading" rounded flat label="Redefinir" class="theme-button" @click="onSubmit()" />
       </q-card-section>
