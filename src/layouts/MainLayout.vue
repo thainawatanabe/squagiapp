@@ -84,7 +84,7 @@ const menuList = [
     caption: '',
     icon: 'logout',
     show: true,
-    link: '/login'
+    link: '/'
   }
 ];
 

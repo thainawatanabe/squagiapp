@@ -10,15 +10,19 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+* {
+  font-family: 'Muli-SemiBold';
+  font-size: 14px;
+  color: #363636;
+}
 .q-card {
   max-width: 450px;
   min-width: 350px;
   background-color: #fff;
   text-align: center;
   border-radius: 15px;
-  margin: auto auto;
   box-shadow: 0px 5px 10px #92929259;
-  padding: 0 20px;
+  padding: 20px;
 }
 
 .q-layout {

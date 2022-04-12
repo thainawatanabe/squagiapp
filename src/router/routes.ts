@@ -23,40 +23,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: "",
-        component: () => import("pages/Login.vue")
-      }
-    ]
-  },
-
-  {
-    path: "/login",
-    component: () => import("layouts/BackgroundLayout.vue"),
-    children: [
-      {
-        path: "",
-        component: () => import("pages/Login.vue")
-      }
-    ]
-  },
-
-  {
-    path: "/cadastrar",
-    component: () => import("layouts/BackgroundLayout.vue"),
-    children: [
-      {
-        path: "",
-        component: () => import("pages/SignUp.vue")
-      }
-    ]
-  },
-
-  {
-    path: "/senha",
-    component: () => import("layouts/BackgroundLayout.vue"),
-    children: [
-      {
-        path: "",
-        component: () => import("pages/ResetPassword.vue")
+        component: () => import("pages/Main.vue")
       }
     ]
   },

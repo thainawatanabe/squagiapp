@@ -8,6 +8,7 @@ import {
 } from 'vuex'
 
 import session from './session'
+import persistedState from "vuex-persistedstate";
 
 /*
  * If not building with SSR mode, you can
@@ -37,6 +38,7 @@ export const storeKey: InjectionKey<VuexStore<StateInterface>> = Symbol('vuex-ke
 
 export default store(function (/* { ssrContext } */) {
   const Store = createStore<StateInterface>({
+    plugins: [persistedState()],
     modules: {
       session
     },
