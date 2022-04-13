@@ -28,6 +28,7 @@
         dense
         outlined
         color="primary"
+        @keydown.enter="handleSubmit(type)"
         v-model="password"
         label="Senha"
         type="password"
@@ -38,6 +39,7 @@
         dense
         outlined
         color="primary"
+        @keydown.enter="handleSubmit(type)"
         v-model="passwordRequest.password"
         label="Senha"
         type="password"
@@ -71,6 +73,7 @@
           dense
           outlined
           color="primary"
+          @keydown.enter="handleSubmit(type)"
           v-model="signUp.password"
           label="Senha"
           type="password"
@@ -103,8 +106,6 @@
       </p>
     </q-card-section>
   </q-card>
-
-  <div></div>
 </template>
 
 <script lang="ts">
@@ -218,7 +219,7 @@ export default defineComponent({
         this.loading = false;
         return;
       }
-      this.$store.dispatch("saveSessionInfo", response);
+      this.saveSessionInfo(response);
       this.$router.push("/home");
     },
   },
@@ -269,13 +270,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-#input-section {
-  .q-input {
-    max-width: 100%;
-    margin: auto auto;
-    padding-bottom: 10px;
-  }
-}
 .button-like {
   cursor: pointer;
   color: $accent;
@@ -284,12 +278,6 @@ export default defineComponent({
 .register {
   margin-top: 15px;
   font-size: 13px;
-}
-#title {
-  font-size: 26px;
-  text-align: left;
-  font-family: "Montserrat-Bold";
-  margin-bottom: 0;
 }
 .back-button {
   z-index: 9999;

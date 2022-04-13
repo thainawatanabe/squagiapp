@@ -18,3 +18,11 @@ export interface IPasswordRequest {
   token: string | null,
   password: string
 }
+
+export interface IUserSignUp {
+  name: string,
+  email: string,
+  password: string,
+  phone: string,
+  roles: Array<string>
+}

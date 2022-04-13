@@ -40,6 +40,7 @@ h5 {
   text-align: left;
   margin-left: 30px;
   font-family: 'Montserrat-Bold';
+  color: #fff;
 }
 .logo-div {
   margin:auto auto;

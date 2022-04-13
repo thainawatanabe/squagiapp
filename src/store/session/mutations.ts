@@ -2,11 +2,15 @@ import { MutationTree } from 'vuex';
 import { SessionState } from './state';
 
 const mutation: MutationTree<SessionState> = {
-  saveSessionInfo( state: SessionState, payload: SessionState ) {
+  saveSessionInfo( state: SessionState, payload ) {
 
-    state.name = payload.name;
+    const user = {
+      name: payload.name,
+      id: payload.id.toString(),
+      roles: payload.roles
+    }
     state.token = payload.token;
-    state.roles = payload.roles;
+    state.user = user;
   }
 };
 

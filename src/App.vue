@@ -11,9 +11,41 @@ export default defineComponent({
 
 <style lang="scss">
 * {
-  font-family: 'Muli-SemiBold';
+  font-family: "Muli-SemiBold";
   font-size: 14px;
   color: #363636;
+}
+#title {
+  font-size: 26px;
+  text-align: left;
+  font-family: "Montserrat-Bold";
+}
+.background-white {
+  background-color: #fff;
+}
+.color-white {
+  color: #fff;
+}
+.theme-dark {
+  background-color: rgba(18, 19, 23, 1);
+}
+.theme-dark-sidebar {
+  background-color: rgba(26, 28, 35, 1);
+}
+.q-field {
+  background-color: #fff;
+  border-radius: 7px;
+}
+.q-page {
+  padding: 20px;
+}
+#input-section {
+  .q-input {
+    margin: auto auto 10px auto;
+  }
+  .q-select {
+    margin: auto auto 10px auto;
+  }
 }
 .q-card {
   max-width: 450px;
@@ -26,12 +58,20 @@ export default defineComponent({
 }
 
 .q-layout {
-  background-color: #f1f1f1;
+  background-color: $background_main;
+}
+
+.q-drawer {
+  background-color: $background_lighter;
+}
+
+.q-header {
+  background-color: $background_lighter;
 }
 
 .theme-button {
   background: $primary;
-  color:#363636;
+  color: #363636;
 }
 
 .text-warning {

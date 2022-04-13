@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
+    <q-header elevated id="header">
+      <q-toolbar id="header">
         <q-btn
           flat
           dense
@@ -11,34 +11,23 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
-          Squagi
-        </q-toolbar-title>
+        <q-toolbar-title> Squagi </q-toolbar-title>
 
-        <div>
-          <q-btn round flat icon="help_circle" @click="supportRedirect()"/>
-        </div>
+        <q-btn round flat icon="help_circle" @click="supportRedirect()" color="white" />
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <q-item-label
-          header
-        >
-          MENU
-        </q-item-label>
+        <q-item-label header class="label"> {{ 'Olá, ' + user.name }} </q-item-label>
+        <q-item-label header class="label bottom"> {{ 'ID:' + user.id }} </q-item-label>
 
-        <Menu
-          v-for="tab in menuList"
-          :key="tab.title"
-          v-bind="tab"
-        />
+        <q-separator style="background-color: #fff" />
+
+        <Menu v-for="tab in menuList" :key="tab.title" v-bind="tab" />
       </q-list>
+
+      <p style="position:fixed;bottom:0;right:10px">{{ 'Versão: ' + version }}</p>
     </q-drawer>
 
     <q-page-container>
@@ -48,70 +37,100 @@
 </template>
 
 <script lang="ts">
-import Menu from 'src/components/Menu.vue'
+import Menu from "src/components/Menu.vue";
 
-const menuList = [
-  {
-    title: 'Dashboard',
-    caption: '',
-    icon: 'school',
-    show: true,
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Serviços',
-    caption: '',
-    icon: 'code',
-    show: true,
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Planos/serviços',
-    caption: '',
-    icon: 'chat',
-    show: true,
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Usuários',
-    caption: '',
-    icon: 'record_voice_over',
-    show: true,
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Sair',
-    caption: '',
-    icon: 'logout',
-    show: true,
-    link: '/'
-  }
-];
-
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: 'MainLayout',
+  name: "MainLayout",
 
   components: {
-    Menu
+    Menu,
   },
 
   data() {
     return {
       leftDrawerOpen: false,
-      menuList: menuList
-    }
+      roles: this.$store.state.session.user.roles ?? ["USER"],
+    };
   },
 
   methods: {
-    toggleLeftDrawer () {
-      this.leftDrawerOpen = !this.leftDrawerOpen
+    toggleLeftDrawer() {
+      this.leftDrawerOpen = !this.leftDrawerOpen;
     },
 
     supportRedirect() {
-      window.open(`https://api.whatsapp.com/send?phone=553196671332`, '_blank');
+      window.open(`https://api.whatsapp.com/send?phone=553196671332`, "_blank");
+    },
+  },
+
+  computed: {
+    menuList(): Array<Record<string, string | boolean>> {
+      return [
+        {
+          title: "Dashboard",
+          caption: "",
+          icon: "school",
+          show: this.roles.includes("ADMIN"),
+          link: "https://quasar.dev",
+        },
+        {
+          title: "Serviços",
+          caption: "",
+          icon: "code",
+          show: true,
+          link: "https://github.com/quasarframework",
+        },
+        {
+          title: "Planos/serviços",
+          caption: "",
+          icon: "chat",
+          show: true,
+          link: "https://chat.quasar.dev",
+        },
+        {
+          title: "Usuários",
+          caption: "",
+          icon: "record_voice_over",
+          show: this.roles.includes("ADMIN") || this.roles.includes("MANAGER"),
+          link: "/usuarios",
+        },
+        {
+          title: "Sair",
+          caption: "",
+          icon: "logout",
+          show: true,
+          link: "/",
+        },
+      ];
+    },
+
+    user() {
+
+      return this.$store.state.session.user;
+    },
+
+    version() {
+
+      return process.env.APP_VERSION;
     }
-  }
-  })
+  },
+});
 </script>
+<style lang="scss">
+#header {
+  height: 80px;
+  color: #fff;
+}
+.q-toolbar__title {
+  color: #fff;
+}
+.label {
+  color: #fff;
+}
+.bottom {
+  margin-left:15px;
+  padding: 0 0 15px 0;
+}
+</style>
