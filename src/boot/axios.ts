@@ -14,6 +14,7 @@ declare module '@vue/runtime-core' {
 // "export default () => {}" function below (which runs individually
 // for each client)
 axios.defaults.baseURL = 'https://squagi-service.herokuapp.com/squagi/';
+// axios.defaults.baseURL = 'http://localhost:8080/squagi';
 export const api = axios.create({ baseURL: 'http://localhost:8080/squagi' });
 
 export default boot(({ app }) => {

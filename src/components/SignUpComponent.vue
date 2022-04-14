@@ -92,7 +92,7 @@
         />
       </div>
       <p
-        class="button-like text-center q-mt-xs"
+        class="button-like text-center q-mt-sm"
         style="font-size: 13px"
         v-if="type == 'login'"
         @click="type = 'forgotPassword'"
@@ -100,7 +100,7 @@
         Esqueceu a senha?
       </p>
       <p
-        class="button-like text-center q-mt-xs"
+        class="button-like text-center q-mt-sm"
         style="font-size: 13px"
         v-if="type == 'forgotPassword'"
         @click="type = 'login'"
@@ -108,7 +108,7 @@
         Lembrei minha senha
       </p>
       <p
-        class="button-like text-center q-mt-xs"
+        class="button-like text-center q-mt-sm"
         style="font-size: 13px"
         v-if="type == 'signUp'"
         @click="type = 'login'"
