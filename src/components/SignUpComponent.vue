@@ -1,6 +1,6 @@
 <template>
   <q-card>
-    <q-card-section>
+    <q-card-section v-if="!!title">
       <p id="title">{{ title }}</p>
       <p class="no-bottom text-left" v-if="type == 'forgotPassword'">
         Basta nos informar seu endereço de e-mail e nós enviaremos um link de
@@ -14,7 +14,9 @@
         v-if="type == 'login' || type == 'forgotPassword'"
         dense
         outlined
+        ref="username"
         :rules="[(val) => !!val || 'Campo obrigatório', isValidEmail]"
+        lazy-rules
         hide-bottom-space
         color="primary"
         v-model="username"
@@ -47,6 +49,7 @@
       <div v-if="type == 'signUp'">
         <q-input
           dense
+          ref="username"
           outlined
           color="primary"
           v-model="signUp.name"
@@ -56,6 +59,7 @@
           dense
           outlined
           :rules="[(val) => !!val || 'Campo obrigatório', isValidEmail]"
+          lazy-rules
           hide-bottom-space
           color="primary"
           v-model="signUp.email"
@@ -173,6 +177,11 @@ export default defineComponent({
     }
   },
 
+  async mounted() {
+    await this.$nextTick();
+    (this.$refs['username'] as any).$el.focus();
+  },
+
   methods: {
     ...mapActions("session", ["saveSessionInfo"]),
 
@@ -247,7 +256,7 @@ export default defineComponent({
     },
 
     isValidEmail(val: string) {
-      if (this.type != 'signUp' && this.type != 'login') return true;
+      if (this.type == 'newPassword') return true;
       const emailPattern =
         /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
       return emailPattern.test(val) || "E-mail inválido";
@@ -292,7 +301,7 @@ export default defineComponent({
             return true;
           return false;
         case "forgotPassword":
-          if (!this.username) return true;
+          if (!this.username || this.isValidEmail(this.username) !== true) return true;
           return false;
       }
     },

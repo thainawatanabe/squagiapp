@@ -6,6 +6,38 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "App",
+
+  computed: {
+    rootDocument() {
+      return document.documentElement;
+    },
+
+    smallScreen() {
+      return this.$q.screen.xs;
+    },
+  },
+
+  created() {
+    if (this.smallScreen) {
+      this.setSmallDeviceStyle();
+    }
+  },
+
+  methods: {
+    setSmallDeviceStyle() {
+      const rootDocument = document.documentElement;
+      rootDocument.style.setProperty("--card-bg", "");
+      rootDocument.style.setProperty("--card-shadow", "none");
+    },
+  },
+
+  watch: {
+    smallScreen() {
+      if (this.smallScreen) {
+        this.setSmallDeviceStyle();
+      }
+    },
+  },
 });
 </script>
 
@@ -14,6 +46,10 @@ export default defineComponent({
   font-family: "Muli-SemiBold";
   font-size: 14px;
   color: #363636;
+}
+:root {
+  --card-bg: transparent;
+  --card-shadow: 0px 5px 10px #92929259;
 }
 #title {
   font-size: 26px;
@@ -52,16 +88,19 @@ export default defineComponent({
 }
 .q-card {
   max-width: 450px;
-  background-color: #fff;
+  background-color: var(--card-bg);
   text-align: center;
   border-radius: 15px;
-  box-shadow: 0px 5px 10px #92929259;
+  box-shadow: var(--card-shadow);
   padding: 20px;
- margin:auto auto
+  margin: auto auto;
 }
 
 .q-layout {
   background-color: $background_main;
+  @media (max-width: $breakpoint-xs-max) {
+    background-color: $background_main_small;
+  }
 }
 
 .q-drawer {

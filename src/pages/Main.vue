@@ -2,7 +2,7 @@
   <q-page :class="`row justify-center ${$q.screen.xs ? 'items-start' : 'items-center'}`">
     <div :class="`col-sm-6 col-xs-12 ${$q.screen.xs ? 'text-center' : 'text-left'} logo-div`">
       <q-img src="../statics/images/squagi.png" :class="`${$q.screen.xs ? '' : 'q-ml-xl'} logo`"/>
-      <h5 class="gt-xs q-ml-xl">Cresça tão rápido quanto o carregamento dessa página 🚀 e conte com os melhores serviços para isso acontecer.<br />A gente te ajuda!</h5>
+      <h5 class="gt-xs q-ml-xl q-mt-xs">Cresça tão rápido quanto o carregamento dessa página 🚀 e conte com os melhores serviços para isso acontecer.<br />A gente te ajuda!</h5>
     </div>
 
     <div class="col-sm-6 col-xs-12 text-center" >
@@ -37,6 +37,7 @@ export default defineComponent({
   max-width: 350px;
 }
 h5 {
+  font-size: 1.3rem;
   text-align: left;
   font-family: 'Montserrat-Bold';
 }
