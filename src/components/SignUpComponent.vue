@@ -14,6 +14,8 @@
         v-if="type == 'login' || type == 'forgotPassword'"
         dense
         outlined
+        :rules="[(val) => !!val || 'Campo obrigatório', isValidEmail]"
+        hide-bottom-space
         color="primary"
         v-model="username"
         label="E-mail"
@@ -138,11 +140,11 @@ import { mapActions } from "vuex";
 export default defineComponent({
   name: "SignUpComponent",
   data() {
-    const type: String = "login";
-    const username: String = "";
-    const password: String = "";
+    const type: string = "login";
+    const username: string = "";
+    const password: string = "";
     const loading: boolean = false;
-    const error: String = "";
+    const error: string = "";
     const passwordRequest: IPasswordRequest = {
       token: null,
       password: "",
@@ -236,7 +238,7 @@ export default defineComponent({
         password: this.password,
       });
       if (!response) {
-        this.error = "Verifique os campos e tente novamente";
+        this.error = "E-mail ou senha está incorreta. Tente novamente";
         this.loading = false;
         return;
       }
@@ -245,7 +247,7 @@ export default defineComponent({
     },
 
     isValidEmail(val: string) {
-      if (this.type != 'signUp') return true;
+      if (this.type != 'signUp' && this.type != 'login') return true;
       const emailPattern =
         /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
       return emailPattern.test(val) || "E-mail inválido";
@@ -277,7 +279,7 @@ export default defineComponent({
       const type = this.type;
       switch (type) {
         case "login":
-          if (!this.username || !this.password) return true;
+          if (!this.username || !this.password || this.isValidEmail(this.username) !== true) return true;
           return false;
         case "signUp":
           if (
