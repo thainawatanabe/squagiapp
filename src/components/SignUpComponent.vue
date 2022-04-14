@@ -1,16 +1,11 @@
 <template>
   <q-card>
-    <q-btn
-      v-if="type != 'login'"
-      icon="arrow_back"
-      round
-      flat
-      class="text-left back-button"
-      @click="type = 'login'"
-    />
-
     <q-card-section>
       <p id="title">{{ title }}</p>
+      <p class="no-bottom text-left" v-if="type == 'forgotPassword'">
+        Basta nos informar seu endereço de e-mail e nós enviaremos um link de
+        redefinição de senha que permitirá que você escolha uma nova.
+      </p>
     </q-card-section>
 
     <q-card-section id="input-section">
@@ -21,7 +16,7 @@
         outlined
         color="primary"
         v-model="username"
-        label="Usuário"
+        label="E-mail"
       />
       <q-input
         v-if="type == 'login'"
@@ -53,11 +48,13 @@
           outlined
           color="primary"
           v-model="signUp.name"
-          label="Usuário"
+          label="Nome"
         />
         <q-input
           dense
           outlined
+          :rules="[(val) => !!val || 'Campo obrigatório', isValidEmail]"
+          hide-bottom-space
           color="primary"
           v-model="signUp.email"
           label="E-mail"
@@ -65,6 +62,7 @@
         <q-input
           dense
           outlined
+          mask="(##) #####-####"
           color="primary"
           v-model="signUp.phone"
           label="Celular (WhatsApp)"
@@ -80,29 +78,51 @@
         />
       </div>
       <!-- End SignUp password fields -->
+      <p class="text-warning" v-if="error">
+        {{ error }}
+      </p>
+      <div class="row">
+        <q-btn
+          :disable="loading || invalidFields"
+          :loading="loading"
+          flat
+          :label="buttonLabel"
+          class="theme-button col-xs-12 col-sm-12 auto-margin"
+          @click="handleSubmit(type)"
+        />
+      </div>
       <p
-        class="button-like text-left"
+        class="button-like text-center q-mt-xs"
         style="font-size: 13px"
         v-if="type == 'login'"
         @click="type = 'forgotPassword'"
       >
         Esqueceu a senha?
       </p>
-      <p class="text-warning" v-if="error">
-        {{ error }}
+      <p
+        class="button-like text-center q-mt-xs"
+        style="font-size: 13px"
+        v-if="type == 'forgotPassword'"
+        @click="type = 'login'"
+      >
+        Lembrei minha senha
       </p>
-      <q-btn
-        :disable="loading || invalidFields"
-        :loading="loading"
-        rounded
-        flat
-        :label="buttonLabel"
-        class="theme-button"
-        @click="handleSubmit(type)"
-      />
-      <p v-if="type == 'login'" class="register text-left">
-        Não possui uma conta?
-        <span class="button-like" @click="type = 'signUp'">Cadastre-se</span>
+      <p
+        class="button-like text-center q-mt-xs"
+        style="font-size: 13px"
+        v-if="type == 'signUp'"
+        @click="type = 'login'"
+      >
+        Tem uma conta? Conecte-se
+      </p>
+      <q-separator v-if="type == 'login'" />
+      <p v-if="type == 'login'" class="register text-center">
+        <q-btn
+          flat
+          label="Criar nova conta"
+          class="signup-button col-xs-12 col-sm-6 auto-margin"
+          @click="type = 'signUp'"
+        />
       </p>
     </q-card-section>
   </q-card>
@@ -198,12 +218,13 @@ export default defineComponent({
     async handleNewPassword() {
       const response = await userService.resetPassword(this.passwordRequest);
       if (!response) {
-        this.error = 'Verifique o e-mail enviado à sua caixa de entrada e tente novamente';
+        this.error =
+          "Verifique o e-mail enviado à sua caixa de entrada e tente novamente";
         this.loading = false;
         return;
       }
       this.loading = false;
-      this.type = 'login';
+      this.type = "login";
 
       return;
     },
@@ -222,13 +243,20 @@ export default defineComponent({
       this.saveSessionInfo(response);
       this.$router.push("/home");
     },
+
+    isValidEmail(val: string) {
+      if (this.type != 'signUp') return true;
+      const emailPattern =
+        /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
+      return emailPattern.test(val) || "E-mail inválido";
+    },
   },
 
   computed: {
     title(): string {
       const type = this.type;
       const title: Record<string, string> = {
-        login: "Login",
+        login: "",
         signUp: "Cadastro",
         forgotPassword: "Esqueceu sua senha?",
       };
@@ -239,8 +267,8 @@ export default defineComponent({
       const type = this.type;
       const title: Record<string, string> = {
         login: "Entrar",
-        signUp: "Enviar",
-        forgotPassword: "Redefinir"
+        signUp: "Cadastre-se",
+        forgotPassword: "Redefinir",
       };
       return title[type as keyof typeof String] ?? "Enviar";
     },
@@ -256,7 +284,8 @@ export default defineComponent({
             !this.signUp.name ||
             !this.signUp.email ||
             !this.signUp.password ||
-            !this.signUp.phone
+            !this.signUp.phone ||
+            this.isValidEmail(this.signUp.email) !== true
           )
             return true;
           return false;

@@ -1,11 +1,11 @@
 <template>
-  <q-page class="row justify-center items-center">
-    <div class="col-sm-5 col-xs-12 text-center logo-div">
+  <q-page :class="`row justify-center ${$q.screen.xs ? 'items-start' : 'items-center'}`">
+    <div class="col-sm-6 col-xs-12 text-center logo-div">
       <q-img src="../statics/images/squagi.png" class="logo"/>
-      <h5>Está difícil administrar vários perfis nas redes sociais? <br />A gente te ajuda!</h5>
+      <h5 class="gt-xs q-ml-xl">Cresça tão rápido quanto o carregamento dessa página 🚀 e conte com os melhores serviços para isso acontecer.<br />A gente te ajuda!</h5>
     </div>
 
-    <div class="col-sm-5 col-xs-12 text-center">
+    <div class="col-sm-6 col-xs-12 text-center" >
       <SignUpComponent />
     </div>
 
@@ -38,9 +38,7 @@ export default defineComponent({
 }
 h5 {
   text-align: left;
-  margin-left: 30px;
   font-family: 'Montserrat-Bold';
-  color: #fff;
 }
 .logo-div {
   margin:auto auto;

@@ -36,6 +36,9 @@ export default defineComponent({
   background-color: #fff;
   border-radius: 7px;
 }
+.auto-margin {
+  margin: auto auto;
+}
 .q-page {
   padding: 20px;
 }
@@ -49,12 +52,12 @@ export default defineComponent({
 }
 .q-card {
   max-width: 450px;
-  min-width: 350px;
   background-color: #fff;
   text-align: center;
   border-radius: 15px;
   box-shadow: 0px 5px 10px #92929259;
   padding: 20px;
+ margin:auto auto
 }
 
 .q-layout {
@@ -71,7 +74,24 @@ export default defineComponent({
 
 .theme-button {
   background: $primary;
-  color: #363636;
+  color: #fff !important;
+  border-radius: 5px;
+  span {
+    color: #fff !important;
+  }
+}
+
+.signup-button {
+  background: $positive;
+  color: #fff !important;
+  border-radius: 5px;
+  span {
+    color: #fff !important;
+  }
+}
+
+.no-bottom {
+  margin-bottom: 0;
 }
 
 .text-warning {

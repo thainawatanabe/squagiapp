@@ -1,8 +1,8 @@
 {
   "name": "squagi-app",
-  "version": "1.0.0",
+  "version": "1.0.1 BETA",
   "description": "A ticket manager for Squagi",
-  "productName": "Squagi",
+  "productName": "SQUAGI",
   "author": "Thaina Watanabe <tcmwatanabe@gmail.com>",
   "private": true,
   "scripts": {

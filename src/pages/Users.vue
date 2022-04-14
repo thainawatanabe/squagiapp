@@ -27,7 +27,6 @@
         <q-btn
           :disable="loading || !userUpdate.id || !userUpdate.establishments"
           :loading="loading"
-          rounded
           flat
           label="Enviar"
           class="theme-button"
@@ -85,7 +84,6 @@
         <q-btn
           :disable="loading || invalidFields"
           :loading="loading"
-          rounded
           flat
           label="Cadastrar"
           class="theme-button"

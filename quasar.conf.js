@@ -143,8 +143,8 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `Squagi`,
-        short_name: `Squagi`,
+        name: `SQUAGI`,
+        short_name: `SQUAGI`,
         description: `A ticket manager for Squagi`,
         display: 'standalone',
         orientation: 'portrait',
