@@ -34,7 +34,7 @@ export default defineComponent({
       const rootDocument = document.documentElement;
       rootDocument.style.setProperty("--card-bg", "#fff");
       rootDocument.style.setProperty("--card-shadow", "0px 5px 10px #92929259");
-    }
+    },
   },
 
   watch: {
@@ -84,6 +84,11 @@ export default defineComponent({
 }
 .q-page {
   padding: 20px;
+}
+.q-input {
+  span {
+    color: #fff;
+  }
 }
 #input-section {
   .q-input {
