@@ -1,11 +1,12 @@
 import axios from "axios";
 import { Notify } from "quasar";
+import store from "../store";
 
 export default {
   async create(user) {
     const config = {
       headers: {
-        token: "123",
+        token: store().state.session.token,
       },
     };
 
@@ -17,10 +18,40 @@ export default {
     }
   },
 
+  async newUser(user) {
+    const config = {
+      headers: {
+        token: store().state.session.token,
+      },
+    };
+
+    try {
+      const { data } = await axios.post(`users/v1/-/save-user`, user, config);
+      return data;
+    } catch (error) {
+      console.log("error :>> ", error.status);
+    }
+  },
+
+  async newEstablishment(update) {
+    const config = {
+      headers: {
+        token: store().state.session.token,
+      },
+    };
+
+    try {
+      const { data } = await axios.put(`users/v1/-/save-user-establishment`, update, config);
+      return data;
+    } catch (error) {
+      console.log("error :>> ", error.status);
+    }
+  },
+
   async requestNewPassword(username) {
     const config = {
       headers: {
-        token: "123",
+        token: store().state.session.token,
       },
     };
 
@@ -39,7 +70,7 @@ export default {
   async resetPassword(passwordRequest) {
     const config = {
       headers: {
-        token: "123",
+        token: store().state.session.token,
       },
     };
 

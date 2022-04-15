@@ -4,6 +4,7 @@ export interface SessionState {
     name: string;
     id: string;
     roles: Array<string> | null;
+    establishments: Array<Record<string, string>> | null
   };
 }
 
@@ -14,7 +15,8 @@ function state(): SessionState {
       name: "",
       id: "",
       roles: [],
-    },
+      establishments: []
+    }
   };
 }
 

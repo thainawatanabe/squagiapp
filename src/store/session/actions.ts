@@ -5,6 +5,19 @@ import { SessionState } from './state';
 const actions: ActionTree<SessionState, StateInterface> = {
   saveSessionInfo(context, payload) {
     context.commit('saveSessionInfo', payload);
+    if (payload.establishments && payload.establishments[0]) {
+      payload.establishments.forEach((e: Record<string, string>) => {
+        context.commit('updateWorkplaces', {
+          label: e.name,
+          value: e.establishmentId,
+          role: e
+        });
+      });
+    }
+  },
+
+  updateWorkplaces(context, payload) {
+    context.commit('updateWorkplaces', payload);
   }
 };
 

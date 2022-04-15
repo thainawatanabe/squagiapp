@@ -1,6 +1,5 @@
 <template>
   <div id="main">
-    <img src="../statics/images/cesar.jpg" id="banner"/>
     <!--<p>{{ title }}</p>
     <ul>
       <li v-for="todo in todos" :key="todo.id" @click="increment">

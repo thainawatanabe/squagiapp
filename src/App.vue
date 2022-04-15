@@ -29,12 +29,20 @@ export default defineComponent({
       rootDocument.style.setProperty("--card-bg", "");
       rootDocument.style.setProperty("--card-shadow", "none");
     },
+
+    setDefaultStyle() {
+      const rootDocument = document.documentElement;
+      rootDocument.style.setProperty("--card-bg", "#fff");
+      rootDocument.style.setProperty("--card-shadow", "0px 5px 10px #92929259");
+    }
   },
 
   watch: {
     smallScreen() {
       if (this.smallScreen) {
         this.setSmallDeviceStyle();
+      } else {
+        this.setDefaultStyle();
       }
     },
   },
@@ -45,10 +53,9 @@ export default defineComponent({
 * {
   font-family: "Muli-SemiBold";
   font-size: 14px;
-  color: #363636;
 }
 :root {
-  --card-bg: transparent;
+  --card-bg: #fff;
   --card-shadow: 0px 5px 10px #92929259;
 }
 #title {

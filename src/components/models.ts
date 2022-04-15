@@ -11,7 +11,10 @@ export interface ISignUp {
   name: string,
   email: string,
   password: string,
-  phone: string
+  phone: string,
+  roles: Array<string>,
+  createdAt: number,
+  establishments: Array<Record<string, string>>
 }
 
 export interface IPasswordRequest {
@@ -24,5 +27,24 @@ export interface IUserSignUp {
   email: string,
   password: string,
   phone: string,
-  roles: Array<string>
+  roles: Array<string>,
+  establishments: Array<Record<string, string>>
+}
+
+export interface IWorkplace {
+  document: string,
+  name: string,
+  email: string,
+  phone: string,
+  department: string,
+  website: string,
+  address: Address,
+  createdAt: number,
+  establishmentId: string
+}
+
+export interface Address {
+  country: string,
+  state: string,
+  city: string
 }

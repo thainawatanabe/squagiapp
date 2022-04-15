@@ -43,6 +43,10 @@ h5 {
 }
 .logo-div {
   margin:auto auto;
+  @media (max-width: $breakpoint-xs-max) {
+    margin: 0 auto;
+    align-self: self-end;
+  }
 }
 #version {
   position: fixed;

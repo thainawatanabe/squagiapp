@@ -1,5 +1,5 @@
 <template>
-  <q-card>
+  <q-card v-if="actionMode">
     <q-card-section v-if="!!title">
       <p id="title">{{ title }}</p>
       <p class="no-bottom text-left" v-if="type == 'forgotPassword'">
@@ -132,6 +132,21 @@
       </p>
     </q-card-section>
   </q-card>
+  <q-card v-else>
+    <q-card-section>
+      <p><strong>Email enviado!</strong></p>
+      <p>
+        Enviamos um email com um link para você poder entrar novamente na sua
+        conta.
+      </p>
+      <q-btn
+        flat
+        label="OK"
+        class="theme-button col-xs-12 col-sm-6 auto-margin"
+        @click="actionMode = true"
+      />
+    </q-card-section>
+  </q-card>
 </template>
 
 <script lang="ts">
@@ -149,6 +164,7 @@ export default defineComponent({
     const password: string = "";
     const loading: boolean = false;
     const error: string = "";
+    const actionMode: boolean = true;
     const passwordRequest: IPasswordRequest = {
       token: null,
       password: "",
@@ -158,6 +174,9 @@ export default defineComponent({
       email: "",
       password: "",
       phone: "",
+      createdAt: 0,
+      roles: ['MANAGER'],
+      establishments: []
     };
     return {
       type,
@@ -167,6 +186,7 @@ export default defineComponent({
       error,
       signUp,
       passwordRequest,
+      actionMode,
     };
   },
 
@@ -179,7 +199,7 @@ export default defineComponent({
 
   async mounted() {
     await this.$nextTick();
-    (this.$refs['username'] as any).$el.focus();
+    (this.$refs["username"] as any).$el.focus();
   },
 
   methods: {
@@ -224,6 +244,7 @@ export default defineComponent({
       this.loading = false;
       this.username = "";
       this.type = "login";
+      this.actionMode = false;
     },
 
     async handleNewPassword() {
@@ -256,7 +277,7 @@ export default defineComponent({
     },
 
     isValidEmail(val: string) {
-      if (this.type == 'newPassword') return true;
+      if (this.type == "newPassword") return true;
       const emailPattern =
         /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
       return emailPattern.test(val) || "E-mail inválido";
@@ -288,7 +309,12 @@ export default defineComponent({
       const type = this.type;
       switch (type) {
         case "login":
-          if (!this.username || !this.password || this.isValidEmail(this.username) !== true) return true;
+          if (
+            !this.username ||
+            !this.password ||
+            this.isValidEmail(this.username) !== true
+          )
+            return true;
           return false;
         case "signUp":
           if (
@@ -301,7 +327,8 @@ export default defineComponent({
             return true;
           return false;
         case "forgotPassword":
-          if (!this.username || this.isValidEmail(this.username) !== true) return true;
+          if (!this.username || this.isValidEmail(this.username) !== true)
+            return true;
           return false;
       }
     },
