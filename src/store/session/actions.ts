@@ -10,7 +10,7 @@ const actions: ActionTree<SessionState, StateInterface> = {
         context.commit('updateWorkplaces', {
           label: e.name,
           value: e.establishmentId,
-          role: e
+          role: e.role
         });
       });
     }

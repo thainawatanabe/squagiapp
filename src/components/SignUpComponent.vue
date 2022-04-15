@@ -173,10 +173,7 @@ export default defineComponent({
       name: "",
       email: "",
       password: "",
-      phone: "",
-      createdAt: 0,
-      roles: ['MANAGER'],
-      establishments: []
+      phone: ""
     };
     return {
       type,
@@ -290,6 +287,7 @@ export default defineComponent({
       const title: Record<string, string> = {
         login: "",
         signUp: "Cadastro",
+        newPassword: "Nova senha",
         forgotPassword: "Esqueceu sua senha?",
       };
       return title[type as keyof typeof String] ?? "Enviar";

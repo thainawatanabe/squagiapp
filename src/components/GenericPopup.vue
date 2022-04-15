@@ -4,7 +4,7 @@
     v-model="show"
   >
     <q-card
-      style="width: 330px;border-radius:12px"
+      style="width: 330px;border-radius:12px;padding:0"
       :style="styling"
     >
       <q-card-section

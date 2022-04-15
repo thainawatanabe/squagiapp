@@ -11,10 +11,7 @@ export interface ISignUp {
   name: string,
   email: string,
   password: string,
-  phone: string,
-  roles: Array<string>,
-  createdAt: number,
-  establishments: Array<Record<string, string>>
+  phone: string
 }
 
 export interface IPasswordRequest {
@@ -26,9 +23,21 @@ export interface IUserSignUp {
   name: string,
   email: string,
   password: string,
+  phone: string
+}
+
+export interface IUserCreation {
+  name: string,
+  email: string,
+  password: string,
   phone: string,
-  roles: Array<string>,
-  establishments: Array<Record<string, string>>
+  userEstablishment: UserEstablishment
+}
+
+export interface UserEstablishment {
+  establishmentId: string,
+  name: string,
+  role: string
 }
 
 export interface IWorkplace {

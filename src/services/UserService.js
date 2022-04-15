@@ -33,7 +33,7 @@ export default {
     }
   },
 
-  async newEstablishment(update) {
+  async sendInvitation(update) {
     const config = {
       headers: {
         token: store().state.session.token,
@@ -41,7 +41,22 @@ export default {
     };
 
     try {
-      const { data } = await axios.put(`users/v1/-/save-user-establishment`, update, config);
+      const { data } = await axios.put(`users/v1/-/send-invitation`, update, config);
+      return data;
+    } catch (error) {
+      console.log("error :>> ", error.status);
+    }
+  },
+
+  async newEstablishment(token) {
+    const config = {
+      headers: {
+        token
+      },
+    };
+
+    try {
+      const { data } = await axios.put(`users/v1/-/save-user-establishment`, null, config);
       return data;
     } catch (error) {
       console.log("error :>> ", error.status);

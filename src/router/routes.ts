@@ -29,6 +29,17 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
+    path: "/convite",
+    component: () => import("layouts/BackgroundLayout.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/Establishments/LinkUser.vue")
+      }
+    ]
+  },
+
+  {
     path: "/usuarios",
     component: () => import("layouts/MainLayout.vue"),
     children: [

@@ -5,7 +5,7 @@
         class="col-xl-4 col-lg-5 col-md-6 col-sm-8 col-xs-12"
         id="input-section"
       >
-        <p id="title">Cadastro</p>
+        <p id="title">Cadastrar novo estabelecimento</p>
         <q-input
           dense
           outlined
@@ -239,7 +239,7 @@ export default defineComponent({
     ...mapActions("session", ["updateWorkplaces"]),
 
     handlePopupClose() {
-      location.reload();
+      this.$router.push('/home');
       // this.workplace.document = "";
       // this.workplace.name = "";
       // this.workplace.email = "";
