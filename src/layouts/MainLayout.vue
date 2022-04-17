@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh lpR fFf">
     <q-header elevated id="header">
       <q-toolbar id="header">
         <q-btn
@@ -11,19 +11,17 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> SQUAGI </q-toolbar-title>
+        <q-toolbar-title> <q-img class="toolbar-logo" src="../statics/images/squagi.png" /> </q-toolbar-title>
 
         <q-btn
           round
           flat
-          icon="help_circle"
-          @click="supportRedirect()"
-          color="white"
+          icon="notifications"
         />
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+    <q-drawer id="drawer" v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
         <!-- <div class="flex">
           <q-select
@@ -33,6 +31,7 @@
             map-options
             emit-value
             outlined
+            behavior="menu"
             bg-color="white"
             v-model="language"
             :options="options"
@@ -45,35 +44,40 @@
           </q-select>
         </div> -->
 
+        <q-item-label header class="label bottom q-mt-md">
+          <p class="no-bottom">{{ "Olá, " + user.name }}</p>
+          <span>{{ "ID:" + user.id }} <q-btn round flat icon="content_copy" class="copy-btn" @click="copy(user.id)" /></span>
+        </q-item-label>
+
         <div class="select-div">
           <q-select
             dense
-            class="q-mt-md"
+            class="q-mb-md"
             outlined
-            color="primary"
             map-options
+            behavior="menu"
             emit-value
             v-model="selectedEstablishment"
             label="Estabelecimentos"
             :options="establishments"
-          />
+          >
+          <template #before-options v-if="roles.includes('MANAGER') || this.roles.includes('ADMIN')">
+            <q-item clickable to="/estabelecimentos">
+              <span id="add-establishment">Adicionar estabelecimento</span>
+            </q-item>
+            <q-separator />
+          </template>
+          </q-select>
         </div>
 
-        <q-item-label header class="label">
-          {{ "Olá, " + user.name }}
-        </q-item-label>
-        <q-item-label header class="label bottom">
-          {{ "ID:" + user.id }}
-        </q-item-label>
-
-        <q-separator style="background-color: #fff" />
+        <q-separator />
 
         <Menu v-for="tab in menuList" :key="tab.title" v-bind="tab" />
       </q-list>
 
-      <p style="position: fixed; bottom: 0; right: 10px">
+      <!--<p style="bottom: 0" class="text-right q-mr-md">
         {{ "Versão: " + version }}
-      </p>
+      </p>-->
     </q-drawer>
 
     <q-page-container>
@@ -84,14 +88,14 @@
 
 <script lang="ts">
 import Menu from "src/components/Menu.vue";
-
+import helpers from "src/utils/helpers";
 import { defineComponent } from "vue";
 // import brazilFlag from "../statics/i18n/img/brazil.png";
 // import usaFlag from "../statics/i18n/img/united-states.png";
 
 export default defineComponent({
   name: "MainLayout",
-
+  mixins: [helpers],
   components: {
     Menu,
   },
@@ -118,7 +122,7 @@ export default defineComponent({
   },
 
   created() {
-    this.language = this.lang.value;
+    // this.language = this.lang.value;
     if (this.establishments.length == 1) {
       this.selectedEstablishment = this.establishments[0].value;
     }
@@ -135,7 +139,7 @@ export default defineComponent({
   },
 
   computed: {
-    establishments() {
+    establishments(): Array<Record<string, string>> {
       return this.$store.state.session.user.establishments ?? [];
     },
 
@@ -144,238 +148,225 @@ export default defineComponent({
     > {
       return [
         {
-          title: "Estabelecimentos",
+          title: "Dashboard",
           caption: "",
-          icon: "add",
+          icon: "",
           show: true,
-          link: "/estabelecimentos",
+          link: "/home",
         },
         {
           title: "Usuários",
           caption: "",
-          icon: "person",
-          show: true,
+          icon: "",
+          show: this.roles.includes('MANAGER') || this.roles.includes('ADMIN'),
           link: "/usuarios",
-        },
-        {
-          title: "Dashboard",
-          caption: "",
-          icon: "school",
-          show: true,
-          link: "/home",
         },
         {
           title: "Criação FEED/STORY",
           caption: "",
-          icon: "code",
+          icon: "",
           show: true,
-          link: "/home",
+          link: "/feed",
           subMenu: [
             {
               title: "Solicitar",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
+              link: "",
             },
             {
               title: "Solicitações",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
+              link: "/a",
             },
             {
               title: "Termos",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
-            },
+              link: "/termos",
+            }
           ],
-        },
-        {
-          title: "Planos/serviços",
-          caption: "",
-          icon: "chat",
-          show: true,
-          link: "/home",
         },
         {
           title: "Cartão de visita",
           caption: "",
-          icon: "record_voice_over",
+          icon: "",
           show: true,
-          link: "https://mycard.tec.br",
+          link: "/nothing",
+          url: "https://mycard.tec.br",
         },
         {
           title: "Logo",
           caption: "",
-          icon: "record_voice_over",
+          icon: "",
           show: true,
-          link: "/home",
+          link: "/logo",
         },
         {
           title: "Site",
           caption: "",
-          icon: "record_voice_over",
+          icon: "",
           show: true,
-          link: "/home",
+          link: "/site",
         },
         {
           title: "Editor vídeo/Motion",
           caption: "",
-          icon: "camera",
+          icon: "",
           show: true,
-          link: "/home",
+          link: "/editor",
         },
         {
           title: "Gestão de rede social",
           caption: "",
-          icon: "record_voice_over",
+          icon: "",
           show: true,
-          link: "/home",
+          link: "/gestao-rede",
           subMenu: [
             {
               title: "Solicitar",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
+              link: "",
             },
             {
               title: "Solicitações",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
+              link: "/solicitar",
             },
             {
               title: "Programação",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
+              link: "/programacao",
             },
             {
               title: "Relatorio",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
+              link: "/relatorio",
             },
           ],
         },
         {
           title: "Gestão Tráfego pago",
           caption: "",
-          icon: "record_voice_over",
+          icon: "",
           show: true,
-          link: "/home",
+          link: "/gestao-trafego",
           subMenu: [
             {
               title: "Solicitar",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
+              link: "",
             },
             {
               title: "Solicitações",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
+              link: "/solicitacoes",
             },
             {
               title: "ADS",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
+              link: "/ads",
             },
           ],
         },
         {
           title: "Parceiros",
           caption: "",
-          icon: "person",
+          icon: "",
           show: true,
-          link: "/home",
+          link: "/parceiros",
           subMenu: [
             {
               title: "Digital influencer",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
+              link: "",
             },
             {
               title: "Fotógrafo",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
+              link: "/fotografo",
             },
             {
               title: "Quero ser um parceiro",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
+              link: "/contrato",
             },
           ],
         },
         {
           title: "Financeiro",
           caption: "",
-          icon: "money",
+          icon: "",
           show: true,
-          link: "/home",
+          link: "/financeiro",
           subMenu: [
             {
               title: "Planos/Serviços",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
+              link: "",
             },
             {
               title: "Faturas",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
+              link: "/faturas",
             },
           ],
         },
         {
           title: "Configuração",
           caption: "",
-          icon: "settings",
+          icon: "",
           show: true,
-          link: "/home",
+          link: "/configuracao",
           subMenu: [
             {
               title: "Meu usuário",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
+              link: "",
             },
             {
               title: "Empresa",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
+              link: "/empresa",
             },
             {
               title: "Equipe",
               caption: "",
               icon: "",
               show: true,
-              link: "/home",
+              link: "/equipe",
             },
           ],
         },
@@ -426,20 +417,25 @@ export default defineComponent({
 <style lang="scss">
 #header {
   height: 80px;
-  color: #fff;
-}
-.q-toolbar__title {
-  color: #fff;
-}
-.label {
-  color: #fff;
 }
 .bottom {
   margin-left: 15px;
-  padding: 0 0 15px 0;
+  padding: 0;
 }
 .select-div {
   max-width: 80%;
   margin: auto auto;
+}
+.toolbar-logo {
+  max-width: 120px;
+}
+.copy-btn {
+  i {
+    font-size: 17px !important;
+  }
+}
+#add-establishment {
+  font-family: 'Montserrat-SemiBold';
+  margin-top: 5px;
 }
 </style>

@@ -13,6 +13,8 @@
 // Tip: Use the "Theme Builder" on Quasar's documentation website.
 
 $primary   : #FBC201;
+$primary_shadow: rgba(251,	194,	1, 0.3);
+$primary_shadow_dark: rgba(141, 114, 25, 0.7);
 $secondary : #473400;
 $accent    : #168AD4;
 
@@ -25,4 +27,4 @@ $warning   : #FFBC00;
 // $background_main: rgba(18,19,23,1);
 $background_main: #F0F2F5;
 $background_main_small: #fff;
-$background_lighter: rgba(26,28,35,1);
+$background_lighter: #fff;

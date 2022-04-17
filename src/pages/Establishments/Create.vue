@@ -5,8 +5,8 @@
         class="col-xl-4 col-lg-5 col-md-6 col-sm-8 col-xs-12"
         id="input-section"
       >
-        <p id="title">Cadastrar novo estabelecimento</p>
-        <q-input
+        <p id="title">Cadastrar empresa</p>
+        <!--<q-input
           dense
           outlined
           :rules="[
@@ -18,16 +18,17 @@
           color="primary"
           v-model="workplace.document"
           label="CNPJ/CPF da empresa"
-        />
+        />-->
         <q-input
           dense
           outlined
-          :rules="[(val) => !!val || 'Campo obrigatório']"
+          :rules="[(val) => !!val || 'Campo obrigatório', isValidName]"
+          maxlength="15"
           lazy-rules
           hide-bottom-space
           color="primary"
           v-model="workplace.name"
-          label="Nome"
+          label="Nome da empresa"
         />
         <q-input
           dense
@@ -37,22 +38,24 @@
           hide-bottom-space
           color="primary"
           v-model="workplace.email"
-          label="E-mail"
+          label="E-mail da empresa"
         />
         <q-input
           dense
           outlined
-          :rules="[(val) => !!val || 'Campo obrigatório']"
+          :rules="[(val) => !!val || 'Campo obrigatório', isValidPhone]"
           lazy-rules
           hide-bottom-space
           color="primary"
           mask="(##) #####-####"
+          unmasked-value
           v-model="workplace.phone"
-          label="Telefone (WhatsApp)"
+          label="Telefone da empresa"
         />
         <q-select
           dense
           outlined
+          behavior="menu"
           color="primary"
           v-model="workplace.department"
           map-options
@@ -73,8 +76,12 @@
         <q-select
           dense
           outlined
+          behavior="menu"
           color="primary"
           v-model="workplace.address.country"
+          :rules="[(val) => !!val || 'Campo obrigatório']"
+          lazy-rules
+          hide-bottom-space
           map-options
           emit-value
           :options="countryOptions"
@@ -84,6 +91,11 @@
           dense
           outlined
           color="primary"
+          behavior="menu"
+          :rules="[(val) => !!val || 'Campo obrigatório']"
+          lazy-rules
+          hide-bottom-space
+          @update:model-value="searchCities"
           v-model="workplace.address.state"
           map-options
           emit-value
@@ -92,7 +104,21 @@
         />
         <q-input
           dense
+          v-if="workplace.address.country != 'Brasil' && workplace.address.country"
           outlined
+          :rules="[(val) => !!val || 'Campo obrigatório']"
+          lazy-rules
+          hide-bottom-space
+          color="primary"
+          v-model="workplace.address.city"
+          label="Cidade"
+        />
+        <q-select
+          dense
+          v-if="workplace.address.country == 'Brasil' && workplace.address.state"
+          outlined
+          :options="citiesOptions"
+          :loading="citiesLoading"
           :rules="[(val) => !!val || 'Campo obrigatório']"
           lazy-rules
           hide-bottom-space
@@ -102,15 +128,21 @@
         />
       </div>
     </div>
-    <div class="col-xs-12">
-      <q-btn
-        :disable="loading || invalidFields"
-        :loading="loading"
-        flat
-        label="Enviar"
-        class="theme-button"
-        @click="handleSubmit()"
-      />
+    <div class="row">
+      <div
+        :class="`col-xl-4 col-lg-5 col-md-6 col-sm-8 col-xs-12 ${
+          $q.screen.xs ? 'text-center' : 'text-right'
+        }`"
+      >
+        <q-btn
+          :disable="loading || invalidFields"
+          :loading="loading"
+          flat
+          label="Cadastrar"
+          class="theme-button"
+          @click="handleSubmit()"
+        />
+      </div>
     </div>
   </q-page>
   <GenericPopup
@@ -129,9 +161,11 @@ import states from "../../statics/utils/states.json";
 import establishmentService from "../../services/EstablishmentService.js";
 import { mapActions } from "vuex";
 import GenericPopup from "../../components/GenericPopup.vue";
+import helpers from "src/utils/helpers";
 
 export default defineComponent({
   name: "PageIndex",
+  mixins: [helpers],
   components: { ExampleComponent, GenericPopup },
   data() {
     const countryOptions = countries;
@@ -186,6 +220,7 @@ export default defineComponent({
       "Automotiva",
       "Casas / Decoração / Móveis",
       "Celebridades/Figura Publica",
+      "Comunicação",
       "Comunidade",
       "Educação",
       "Eletrônicos",
@@ -204,6 +239,8 @@ export default defineComponent({
       "Viagens/Hotelaria",
       "Outros",
     ];
+    const citiesLoading: boolean = false;
+    const citiesOptions: Array<string> = [];
     return {
       workplace,
       departmentOptions,
@@ -212,6 +249,8 @@ export default defineComponent({
       loading,
       showPopup,
       popupProps,
+      citiesLoading,
+      citiesOptions
     };
   },
 
@@ -219,18 +258,12 @@ export default defineComponent({
     invalidFields() {
       const w = this.workplace;
       const address = w.address;
-      if (
-        !w.name ||
-        !w.document ||
-        !w.email ||
-        !w.phone ||
-        !w.department ||
-        !w.website
-      )
+      if (!w.name || !w.email || !w.phone || !w.department || !w.website)
         return true;
       if (!address.country || !address.state || !address.city) return true;
       if (!this.isValidEmail(w.email)) return true;
-      if (!this.isValidEstablishmentDocument(w.document)) return true;
+      if (this.isValidPhone(w.phone) !== true) return true;
+      if (this.isValidName(w.name) !== true) return true;
       return false;
     },
   },
@@ -239,7 +272,7 @@ export default defineComponent({
     ...mapActions("session", ["updateWorkplaces"]),
 
     handlePopupClose() {
-      this.$router.push('/home');
+      this.$router.push("/home");
       // this.workplace.document = "";
       // this.workplace.name = "";
       // this.workplace.email = "";
@@ -252,6 +285,19 @@ export default defineComponent({
       //   city: "",
       // };
       // this.showPopup = false;
+    },
+
+    async searchCities(uf: string) {
+      this.citiesLoading = true;
+      this.workplace.address.city = '';
+      const { data } = await this.$axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`);
+      if (data && data.length > 0) {
+
+        this.citiesOptions = data.map((d: any) => {
+          return d.nome;
+        });
+        this.citiesLoading = false;
+      }
     },
 
     async handleSubmit() {
@@ -268,12 +314,6 @@ export default defineComponent({
       });
       this.loading = false;
       this.showPopup = true;
-    },
-
-    isValidEmail(val: string) {
-      const emailPattern =
-        /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
-      return emailPattern.test(val) || "E-mail inválido";
     },
 
     isValidEstablishmentDocument(val: string) {

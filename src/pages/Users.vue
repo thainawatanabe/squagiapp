@@ -19,6 +19,7 @@
           color="primary"
           :rules="[(val) => !!val || 'Campo obrigatório']"
           lazy-rules
+          behavior="menu"
           hide-bottom-space
           v-model="userUpdate.establishments"
           :options="establishments"
@@ -29,7 +30,7 @@
           :disable="loading || !userUpdate.id || !userUpdate.establishments"
           :loading="loading"
           flat
-          label="Cadastrar"
+          label="Vincular"
           class="theme-button"
           @click="handleSubmit('update')"
         />
@@ -44,7 +45,8 @@
           <q-input
             dense
             outlined
-            :rules="[(val) => !!val || 'Campo obrigatório']"
+            maxlength="10"
+            :rules="[(val) => !!val || 'Campo obrigatório', isValidName]"
             lazy-rules
             hide-bottom-space
             color="primary"
@@ -64,10 +66,11 @@
           <q-input
             dense
             outlined
-            :rules="[(val) => !!val || 'Campo obrigatório']"
+            :rules="[(val) => !!val || 'Campo obrigatório', isValidPhone]"
             lazy-rules
             hide-bottom-space
             mask="(##) #####-####"
+            unmasked-value
             color="primary"
             v-model="signUp.phone"
             label="Celular (WhatsApp)"
@@ -77,6 +80,7 @@
             dense
             outlined
             color="primary"
+            behavior="menu"
             :rules="[(val) => !!val || 'Campo obrigatório']"
             lazy-rules
             hide-bottom-space
@@ -90,6 +94,7 @@
             dense
             outlined
             color="primary"
+            behavior="menu"
             v-model="signUp.role"
             :rules="[(val) => !!val || 'Campo obrigatório']"
             lazy-rules
@@ -128,9 +133,11 @@ import ExampleComponent from "components/OptionsComponent.vue";
 import UserService from "src/services/UserService";
 import { defineComponent } from "vue";
 import GenericPopup from "../components/GenericPopup.vue";
+import helpers from "src/utils/helpers";
 
 export default defineComponent({
   name: "PageIndex",
+  mixins: [helpers],
   components: { ExampleComponent, GenericPopup },
   data() {
     const establishments = this.$store.state.session.user.establishments ?? [];
@@ -185,6 +192,9 @@ export default defineComponent({
     invalidFields() {
       const signUp = this.signUp;
 
+      if (!this.isValidEmail(signUp.email)) return true;
+      if (!this.isValidPhone(signUp.phone)) return true;
+
       if (
         !signUp.name ||
         !signUp.email ||
@@ -203,7 +213,7 @@ export default defineComponent({
       if (establishmentId) {
         const establishment = userEstablishments.find(
           (e: any) => e.value == establishmentId
-          );
+        );
         const role = establishment ? establishment.role : "USER";
         let options = [];
         switch (role) {
@@ -250,12 +260,6 @@ export default defineComponent({
   },
 
   methods: {
-    isValidEmail(val: string) {
-      const emailPattern =
-        /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
-      return emailPattern.test(val) || "E-mail inválido";
-    },
-
     async handleSubmit(type: string) {
       this.loading = true;
       if (type == "newUser") {

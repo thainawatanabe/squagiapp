@@ -54,6 +54,15 @@ export default defineComponent({
   font-family: "Muli-SemiBold";
   font-size: 14px;
 }
+p {
+  color: #363636;
+}
+span {
+  color: #363636;
+}
+.q-item__label {
+  color: #363636;
+}
 :root {
   --card-bg: #fff;
   --card-shadow: 0px 5px 10px #92929259;

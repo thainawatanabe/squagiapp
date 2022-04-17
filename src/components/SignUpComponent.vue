@@ -28,6 +28,9 @@
         outlined
         color="primary"
         @keydown.enter="handleSubmit(type)"
+        :rules="[(val) => !!val || 'Campo obrigatório']"
+        lazy-rules
+        hide-bottom-space
         v-model="password"
         label="Senha"
         type="password"
@@ -39,6 +42,9 @@
         outlined
         color="primary"
         @keydown.enter="handleSubmit(type)"
+        :rules="[(val) => !!val || 'Campo obrigatório', isValidPassword]"
+        lazy-rules
+        hide-bottom-space
         v-model="passwordRequest.password"
         label="Senha"
         type="password"
@@ -51,6 +57,10 @@
           dense
           ref="username"
           outlined
+          :rules="[(val) => !!val || 'Campo obrigatório', isValidName]"
+          lazy-rules
+          hide-bottom-space
+          maxlength="10"
           color="primary"
           v-model="signUp.name"
           label="Nome"
@@ -69,6 +79,10 @@
           dense
           outlined
           mask="(##) #####-####"
+          unmasked-value
+          :rules="[(val) => !!val || 'Campo obrigatório', isValidPhone]"
+          lazy-rules
+          hide-bottom-space
           color="primary"
           v-model="signUp.phone"
           label="Celular (WhatsApp)"
@@ -78,6 +92,9 @@
           outlined
           color="primary"
           @keydown.enter="handleSubmit(type)"
+          :rules="[(val) => !!val || 'Campo obrigatório', isValidPassword]"
+          lazy-rules
+          hide-bottom-space
           v-model="signUp.password"
           label="Senha"
           type="password"
@@ -134,9 +151,9 @@
   </q-card>
   <q-card v-else>
     <q-card-section>
-      <p><strong>Email enviado!</strong></p>
+      <p id="title" style="text-align: center !important">E-mail enviado!</p>
       <p>
-        Enviamos um email com um link para você poder entrar novamente na sua
+        Enviamos um e-mail com um link para você poder entrar novamente na sua
         conta.
       </p>
       <q-btn
@@ -155,9 +172,11 @@ import { ISignUp, IPasswordRequest } from "components/models";
 import authService from "src/services/AuthService";
 import userService from "src/services/UserService";
 import { mapActions } from "vuex";
+import helpers from "src/utils/helpers";
 
 export default defineComponent({
   name: "SignUpComponent",
+  mixins: [helpers],
   data() {
     const type: string = "login";
     const username: string = "";
@@ -173,7 +192,7 @@ export default defineComponent({
       name: "",
       email: "",
       password: "",
-      phone: ""
+      phone: "",
     };
     return {
       type,
@@ -272,13 +291,6 @@ export default defineComponent({
       this.saveSessionInfo(response);
       this.$router.push("/home");
     },
-
-    isValidEmail(val: string) {
-      if (this.type == "newPassword") return true;
-      const emailPattern =
-        /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
-      return emailPattern.test(val) || "E-mail inválido";
-    },
   },
 
   computed: {
@@ -320,12 +332,20 @@ export default defineComponent({
             !this.signUp.email ||
             !this.signUp.password ||
             !this.signUp.phone ||
-            this.isValidEmail(this.signUp.email) !== true
+            this.isValidEmail(this.signUp.email) !== true ||
+            this.isValidPassword(this.signUp.password) !== true ||
+            this.isValidName(this.signUp.name) !== true ||
+            this.isValidPhone(this.signUp.phone) !== true
           )
             return true;
           return false;
         case "forgotPassword":
           if (!this.username || this.isValidEmail(this.username) !== true)
+            return true;
+          return false;
+
+        case "newPassword":
+          if (this.isValidPassword(this.passwordRequest.password) !== true)
             return true;
           return false;
       }
