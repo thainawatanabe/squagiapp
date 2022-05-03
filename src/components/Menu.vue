@@ -119,15 +119,20 @@ export default defineComponent({
 </script>
 <style lang="scss">
 .active-item {
-  background: $primary_shadow;
-  div {
-    color: $primary_shadow_dark;
-  }
+  background: linear-gradient(
+    90deg,
+    rgba(255, 188, 0, 0.4) 0%,
+    rgba(255, 188, 0, 0.6) 50%,
+    rgba(255, 188, 0, 0.8) 100%
+  );
+  // div {
+  //   color: $primary_shadow;
+  // }
 }
 .submenu-class-active {
   background: #fff;
   div {
-    color: $primary_shadow_dark;
+    color: $primary_shadow;
   }
 }
 .submenu-class-inactive {
@@ -137,9 +142,14 @@ export default defineComponent({
   }
 }
 .active-expansion {
-  background: $primary_shadow;
-  .q-item__label {
-    color: $primary_shadow_dark;
-  }
+  background: linear-gradient(
+    90deg,
+    rgba(255, 188, 0, 0.4) 0%,
+    rgba(255, 188, 0, 0.6) 50%,
+    rgba(255, 188, 0, 0.8) 100%
+  );
+  // .q-item__label {
+  //   color: $primary_shadow_dark;
+  // }
 }
 </style>

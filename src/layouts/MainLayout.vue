@@ -11,17 +11,20 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> <q-img class="toolbar-logo" src="../statics/images/squagi.png" /> </q-toolbar-title>
+        <q-toolbar-title>
+          <q-img class="toolbar-logo" src="../statics/images/squagi.png" />
+        </q-toolbar-title>
 
-        <q-btn
-          round
-          flat
-          icon="notifications"
-        />
+        <q-btn round flat icon="notifications" />
       </q-toolbar>
     </q-header>
 
-    <q-drawer id="drawer" v-model="leftDrawerOpen" show-if-above bordered>
+    <q-drawer
+      v-model="leftDrawerOpen"
+      show-if-above
+      behavior="desktop"
+      bordered
+    >
       <q-list>
         <!-- <div class="flex">
           <q-select
@@ -46,7 +49,15 @@
 
         <q-item-label header class="label bottom q-mt-md">
           <p class="no-bottom">{{ "Olá, " + user.name }}</p>
-          <span>{{ "ID:" + user.id }} <q-btn round flat icon="content_copy" class="copy-btn" @click="copy(user.id)" /></span>
+          <span
+            >{{ "ID:" + user.id }}
+            <q-btn
+              round
+              flat
+              icon="content_copy"
+              class="copy-btn"
+              @click="copy(user.id)"
+          /></span>
         </q-item-label>
 
         <div class="select-div">
@@ -61,12 +72,17 @@
             label="Estabelecimentos"
             :options="establishments"
           >
-          <template #before-options v-if="roles.includes('MANAGER') || this.roles.includes('ADMIN')">
-            <q-item clickable to="/estabelecimentos">
-              <span id="add-establishment">Adicionar estabelecimento</span>
-            </q-item>
-            <q-separator />
-          </template>
+            <template
+              #after-options
+              v-if="roles.includes('MANAGER') || this.roles.includes('ADMIN')"
+            >
+              <q-item clickable to="/estabelecimentos">
+                <p id="add-establishment"
+                  ><q-icon name="add" class="q-mr-xs q-mb-xs"/>Ver mais
+                </p>
+              </q-item>
+              <q-separator />
+            </template>
           </q-select>
         </div>
 
@@ -158,7 +174,7 @@ export default defineComponent({
           title: "Usuários",
           caption: "",
           icon: "",
-          show: this.roles.includes('MANAGER') || this.roles.includes('ADMIN'),
+          show: this.roles.includes("MANAGER") || this.roles.includes("ADMIN"),
           link: "/usuarios",
         },
         {
@@ -188,7 +204,7 @@ export default defineComponent({
               icon: "",
               show: true,
               link: "/termos",
-            }
+            },
           ],
         },
         {
@@ -415,6 +431,9 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
+.q-header .q-layout__shadow::after {
+  bottom: 0;
+}
 #header {
   height: 80px;
 }
@@ -423,8 +442,8 @@ export default defineComponent({
   padding: 0;
 }
 .select-div {
-  max-width: 80%;
-  margin: auto auto;
+  max-width: 90%;
+  margin-left: 13px;
 }
 .toolbar-logo {
   max-width: 120px;
@@ -435,7 +454,12 @@ export default defineComponent({
   }
 }
 #add-establishment {
-  font-family: 'Montserrat-SemiBold';
+  font-family: "Montserrat-SemiBold";
   margin-top: 5px;
+}
+.q-drawer {
+  @media (max-width: $breakpoint-xs-max) {
+    width: 100% !important;
+  }
 }
 </style>
