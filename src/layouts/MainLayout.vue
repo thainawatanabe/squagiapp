@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh Lpr lff">
     <q-header elevated id="header">
       <q-toolbar id="header">
         <q-btn
@@ -17,16 +17,18 @@
 
         <q-btn round flat icon="notifications" />
       </q-toolbar>
+      <q-separator />
     </q-header>
 
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
-      behavior="desktop"
+      class="no-scroll"
       bordered
     >
-      <q-list>
-        <!-- <div class="flex">
+      <q-scroll-area class="scroll-area">
+        <q-list padding>
+          <!-- <div class="flex">
           <q-select
             style="margin: auto auto"
             rounded
@@ -47,6 +49,10 @@
           </q-select>
         </div> -->
 
+          <Menu v-for="tab in menuList" :key="tab.title" v-bind="tab" />
+        </q-list>
+      </q-scroll-area>
+      <div style="height: 130px" class="absolute-top">
         <q-item-label header class="label bottom q-mt-md">
           <p class="no-bottom">{{ "Olá, " + user.name }}</p>
           <span
@@ -60,7 +66,7 @@
           /></span>
         </q-item-label>
 
-        <div class="select-div">
+        <div class="select-div" v-if="!this.isEmployee">
           <q-select
             dense
             class="q-mb-md"
@@ -69,27 +75,31 @@
             behavior="menu"
             emit-value
             v-model="selectedEstablishment"
+            @update:model-value="val => onSelectEstablishment(val)"
             label="Estabelecimentos"
             :options="establishments"
           >
             <template
               #after-options
-              v-if="roles.includes('MANAGER') || this.roles.includes('ADMIN')"
+              v-if="establishments[0]"
+            >
+              <q-separator />
+              <q-item clickable to="/estabelecimentos">
+                <span id="add-establishment">Criar estabelecimento </span>
+              </q-item>
+              <q-separator />
+            </template>
+            <template
+              #no-option
             >
               <q-item clickable to="/estabelecimentos">
-                <p id="add-establishment"
-                  ><q-icon name="add" class="q-mr-xs q-mb-xs"/>Ver mais
-                </p>
+                <span id="add-establishment">Criar estabelecimento </span>
               </q-item>
               <q-separator />
             </template>
           </q-select>
         </div>
-
-        <q-separator />
-
-        <Menu v-for="tab in menuList" :key="tab.title" v-bind="tab" />
-      </q-list>
+      </div>
 
       <!--<p style="bottom: 0" class="text-right q-mr-md">
         {{ "Versão: " + version }}
@@ -106,6 +116,7 @@
 import Menu from "src/components/Menu.vue";
 import helpers from "src/utils/helpers";
 import { defineComponent } from "vue";
+import { mapActions, mapGetters } from "vuex";
 // import brazilFlag from "../statics/i18n/img/brazil.png";
 // import usaFlag from "../statics/i18n/img/united-states.png";
 
@@ -139,28 +150,37 @@ export default defineComponent({
 
   created() {
     // this.language = this.lang.value;
-    if (this.establishments.length == 1) {
-      this.selectedEstablishment = this.establishments[0].value;
+    if (this.establishments.length > 0) {
+      const establishmentId = this.establishments[0].value;
+      this.selectedEstablishment = establishmentId;
+      this.onSelectEstablishment(establishmentId);
+    }
+
+    if (this.sessionSelectedEstablishment) {
+      this.selectedEstablishment = this.sessionSelectedEstablishment;
     }
   },
 
   methods: {
+    ...mapActions("session", ["onSelectEstablishment"]),
     toggleLeftDrawer() {
       this.leftDrawerOpen = !this.leftDrawerOpen;
     },
 
     supportRedirect() {
       window.open(`https://api.whatsapp.com/send?phone=553196671332`, "_blank");
-    },
+    }
   },
 
   computed: {
-    establishments(): Array<Record<string, string>> {
-      return this.$store.state.session.user.establishments ?? [];
+    ...mapGetters('session', ['isManager', 'isEmployee']),
+
+    sessionSelectedEstablishment(): string {
+      return this.$store.state.session.user.selectedEstablishment ?? "";
     },
 
     menuList(): Array<
-      Record<string, string | boolean | Array<Record<string, string | boolean>>>
+      Record<string, string | boolean | undefined | Array<Record<string, string | boolean>>>
     > {
       return [
         {
@@ -174,14 +194,14 @@ export default defineComponent({
           title: "Usuários",
           caption: "",
           icon: "",
-          show: this.roles.includes("MANAGER") || this.roles.includes("ADMIN"),
+          show: this.sessionSelectedEstablishment.length > 0,
           link: "/usuarios",
         },
         {
           title: "Criação FEED/STORY",
           caption: "",
           icon: "",
-          show: true,
+          show: this.isEmployee ? false : this.sessionSelectedEstablishment.length > 0,
           link: "/feed",
           subMenu: [
             {
@@ -211,7 +231,7 @@ export default defineComponent({
           title: "Cartão de visita",
           caption: "",
           icon: "",
-          show: true,
+          show: this.isEmployee ? false : this.sessionSelectedEstablishment.length > 0,
           link: "/nothing",
           url: "https://mycard.tec.br",
         },
@@ -219,28 +239,28 @@ export default defineComponent({
           title: "Logo",
           caption: "",
           icon: "",
-          show: true,
+          show: this.isEmployee ? false : this.sessionSelectedEstablishment.length > 0,
           link: "/logo",
         },
         {
           title: "Site",
           caption: "",
           icon: "",
-          show: true,
+          show: this.isEmployee ? false : this.sessionSelectedEstablishment.length > 0,
           link: "/site",
         },
         {
           title: "Editor vídeo/Motion",
           caption: "",
           icon: "",
-          show: true,
+          show: this.isEmployee ? false : this.sessionSelectedEstablishment.length > 0,
           link: "/editor",
         },
         {
           title: "Gestão de rede social",
           caption: "",
           icon: "",
-          show: true,
+          show: this.isEmployee ? false : this.sessionSelectedEstablishment.length > 0,
           link: "/gestao-rede",
           subMenu: [
             {
@@ -277,7 +297,7 @@ export default defineComponent({
           title: "Gestão Tráfego pago",
           caption: "",
           icon: "",
-          show: true,
+          show: this.isEmployee ? false : this.sessionSelectedEstablishment.length > 0,
           link: "/gestao-trafego",
           subMenu: [
             {
@@ -307,7 +327,7 @@ export default defineComponent({
           title: "Parceiros",
           caption: "",
           icon: "",
-          show: true,
+          show: this.isEmployee ? false : this.sessionSelectedEstablishment.length > 0,
           link: "/parceiros",
           subMenu: [
             {
@@ -337,7 +357,7 @@ export default defineComponent({
           title: "Financeiro",
           caption: "",
           icon: "",
-          show: true,
+          show: this.isManager,
           link: "/financeiro",
           subMenu: [
             {
@@ -360,7 +380,7 @@ export default defineComponent({
           title: "Configuração",
           caption: "",
           icon: "",
-          show: true,
+          show: this.isManager,
           link: "/configuracao",
           subMenu: [
             {
@@ -389,7 +409,6 @@ export default defineComponent({
         {
           title: "Sair",
           caption: "",
-          icon: "logout",
           show: true,
           link: "/",
         },
@@ -455,11 +474,12 @@ export default defineComponent({
 }
 #add-establishment {
   font-family: "Montserrat-SemiBold";
-  margin-top: 5px;
+  margin: auto auto;
+  text-align: center;
 }
-.q-drawer {
-  @media (max-width: $breakpoint-xs-max) {
-    width: 100% !important;
-  }
+.scroll-area {
+  height: calc(100% - 130px);
+  margin-top: 130px;
+  border-right: 1px solid #ddd;
 }
 </style>

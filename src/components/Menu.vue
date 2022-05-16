@@ -24,10 +24,8 @@
     :icon="icon"
     expand-icon-class="icon"
     class="item-title"
-    :to="link"
-    :class="'/' + currentRoute.fullPath.split('/')[1] == link ? 'active-expansion' : ''"
+    :class="link.includes('/' + currentRoute.fullPath.split('/')[1]) ? 'active-expansion' : ''"
     v-model="expanded"
-    @click="expanded = !expanded"
   >
     <q-separator />
     <q-list v-for="(menu, i) in subMenu" :key="i">

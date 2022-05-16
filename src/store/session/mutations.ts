@@ -7,8 +7,10 @@ const mutation: MutationTree<SessionState> = {
     const user = {
       name: payload.name,
       id: payload.id.toString(),
+      email: payload.email,
       roles: payload.roles,
-      establishments: []
+      establishments: [],
+      selectedEstablishment: ""
     }
     state.token = payload.token;
     state.user = user;
@@ -16,6 +18,22 @@ const mutation: MutationTree<SessionState> = {
 
   updateWorkplaces( state: SessionState, payload ) {
     state.user.establishments?.push(payload);
+  },
+
+  clearSession( state: SessionState ) {
+    state.token = "";
+    state.user = {
+      name: "",
+      id: "",
+      email: "",
+      roles: [],
+      establishments: [],
+      selectedEstablishment: ""
+    };
+  },
+
+  onSelectEstablishment( state: SessionState, payload ) {
+    state.user.selectedEstablishment = payload;
   }
 };
 

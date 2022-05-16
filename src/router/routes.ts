@@ -68,7 +68,7 @@ const routes: RouteRecordRaw[] = [
       {
         name: "",
         path: "",
-        component: () => import("pages/Index.vue"),
+        component: () => import("src/pages/feed/Request.vue"),
       },
       {
         name: "termos",

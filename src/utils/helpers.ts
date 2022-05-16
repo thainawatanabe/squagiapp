@@ -27,6 +27,20 @@ export default defineComponent({
 
     copy(content: string) {
       copyToClipboard(content);
+    },
+
+    formatDateHour(timestamp: number) {
+      const date = new Date(timestamp);
+      const day = `${date.getDate()}`.padStart(2, "0");
+      const month = `${date.getMonth() + 1}`.padStart(2, "0");
+      const year = `${date.getFullYear()}`.padStart(2, "0");
+      const stringDate = `${day}/${month}/${year}`;
+      const timeDate = new Date(timestamp);
+      const hours = "0" + timeDate.getHours();
+      const minutes = "0" + timeDate.getMinutes();
+      const formattedTime = hours.substr(-2) + "h" + minutes.substr(-2);
+      const formattedDateTime = stringDate + " às " + formattedTime;
+      return formattedDateTime;
     }
   }
 });

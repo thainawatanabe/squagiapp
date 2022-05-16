@@ -21,6 +21,9 @@ export default defineComponent({
     if (this.smallScreen) {
       this.setSmallDeviceStyle();
     }
+
+    //TODO - create global event bus handling generic popup appearance (popupProps, @agree, @cancel events);
+    //TODO - handle invalid token event;
   },
 
   methods: {

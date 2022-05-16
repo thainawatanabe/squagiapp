@@ -18,6 +18,14 @@ const actions: ActionTree<SessionState, StateInterface> = {
 
   updateWorkplaces(context, payload) {
     context.commit('updateWorkplaces', payload);
+  },
+
+  clearSession(context) {
+    context.commit('clearSession');
+  },
+
+  onSelectEstablishment(context, payload) {
+    context.commit('onSelectEstablishment', payload);
   }
 };
 

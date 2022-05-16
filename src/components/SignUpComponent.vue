@@ -210,6 +210,10 @@ export default defineComponent({
     this.passwordRequest.token = this.$route.query.token?.toString() ?? "";
     if (this.passwordRequest.token) {
       this.type = "newPassword";
+    };
+    if (this.type == 'login') {
+
+      this.clearSession();
     }
   },
 
@@ -219,7 +223,7 @@ export default defineComponent({
   },
 
   methods: {
-    ...mapActions("session", ["saveSessionInfo"]),
+    ...mapActions("session", ["saveSessionInfo", "clearSession"]),
 
     handleSubmit(type: string) {
       this.error = "";

@@ -3,8 +3,10 @@ export interface SessionState {
   user: {
     name: string;
     id: string;
+    email: string;
     roles: Array<string> | null;
-    establishments: Array<Record<string, string>> | null
+    establishments: Array<Record<string, string>> | null,
+    selectedEstablishment: string
   };
 }
 
@@ -14,8 +16,10 @@ function state(): SessionState {
     user: {
       name: "",
       id: "",
+      email: "",
       roles: [],
-      establishments: []
+      establishments: [],
+      selectedEstablishment: ""
     }
   };
 }

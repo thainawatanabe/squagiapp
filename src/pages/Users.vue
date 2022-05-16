@@ -129,7 +129,6 @@
 
 <script lang="ts">
 import { IUserCreation } from "components/models";
-import ExampleComponent from "components/OptionsComponent.vue";
 import UserService from "src/services/UserService";
 import { defineComponent } from "vue";
 import GenericPopup from "../components/GenericPopup.vue";
@@ -138,7 +137,7 @@ import helpers from "src/utils/helpers";
 export default defineComponent({
   name: "PageIndex",
   mixins: [helpers],
-  components: { ExampleComponent, GenericPopup },
+  components: { GenericPopup },
   data() {
     const establishments = this.$store.state.session.user.establishments ?? [];
     const signUp = {

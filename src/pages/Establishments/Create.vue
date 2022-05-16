@@ -154,7 +154,6 @@
 
 <script lang="ts">
 import { IWorkplace } from "components/models";
-import ExampleComponent from "components/OptionsComponent.vue";
 import { defineComponent } from "vue";
 import countries from "../../statics/utils/countries.json";
 import states from "../../statics/utils/states.json";
@@ -166,7 +165,7 @@ import helpers from "src/utils/helpers";
 export default defineComponent({
   name: "PageIndex",
   mixins: [helpers],
-  components: { ExampleComponent, GenericPopup },
+  components: { GenericPopup },
   data() {
     const countryOptions = countries;
     const stateOptions = states;
